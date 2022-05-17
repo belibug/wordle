@@ -1,0 +1,9 @@
+{
+  "name": "wordle",
+  "version": "1.0.0",
+  "description": "wordle solver",
+  "main": "app.js",
+  "repository": "git@github.com:belibug/wordle.git",
+  "author": "Manjunath Beli <belibug@outlook.com>",
+  "license": "MIT"
+}
