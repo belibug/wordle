@@ -2,8 +2,13 @@
   "name": "wordle",
   "version": "1.0.0",
   "description": "wordle solver",
+  "type": "module",
   "main": "app.js",
   "repository": "git@github.com:belibug/wordle.git",
   "author": "Manjunath Beli <belibug@outlook.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^5.0.1",
+    "inquirer": "^8.2.4"
+  }
 }
