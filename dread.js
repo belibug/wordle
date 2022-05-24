@@ -5,7 +5,7 @@ import fs from "fs";
 let finalWord = "00000";
 let userFeed = "XXXXX";
 let yellowChars = "";
-let suggWord = "STING";
+let suggWord = "ADMIN";
 
 console.log(chalk.red("lets read Data"));
 
@@ -29,21 +29,21 @@ function filterList(finalWord) {
 }
 // console.log(filterList("A000E"));
 
-function afterUserFeed(userFeed) {
+function afterUserFeed(userFeed, suggWord) {
   userFeed.split("").map((c, i) => {
     // console.log("working on : ", c);
     switch (c) {
       case "X":
-        console.log("ignoring ", suggWord[i]);
+        console.log(suggWord[i], ": Ignoring");
         break;
       case "Y":
-        console.log("yellow word ", suggWord[i]);
+        console.log(suggWord[i], ": Yellow word");
         yellowChars += suggWord[i];
         break;
       case "G":
-        console.log("should add to final word ", suggWord[i]);
+        console.log(suggWord[i], ": Green word");
         finalWord = finalWord.split("");
-        finalWord[i] = c;
+        finalWord[i] = suggWord[i];
         finalWord = finalWord.join("");
         // finalWord[i] = c;
         break;
@@ -51,5 +51,28 @@ function afterUserFeed(userFeed) {
   });
 }
 // console.log(yellowChars, finalWord);
-afterUserFeed("YYGGX");
-console.log(`\nYellow Chars : ${yellowChars}\nFinal Word: ${finalWord}`);
+console.log(chalk.blue(`Suggested word : ${suggWord}`));
+afterUserFeed("GXXYG", suggWord);
+console.log(
+  chalk.blue(`Yellow Chars : ${yellowChars}\nFinal Word: ${finalWord}`),
+  chalk.cyan("\n------------------------------------------------------")
+);
+
+// console.table(curList);
+// function to filter bases on finalWord and yellowChars
+function iterateFilter(yellowChars, finalWord, curList) {
+  let filtList = curList;
+  console.log("list before filter", filtList.length);
+  // filter for Green words
+  finalWord.split("").map((c, i) => {
+    if (c !== "0") {
+      filtList = filtList.filter((word) => word[i] == finalWord[i]);
+    } else {
+      null;
+    }
+  });
+  console.log("list after filter", filtList);
+  return filtList;
+}
+curList = iterateFilter(yellowChars, finalWord, curList);
+console.table(curList);
