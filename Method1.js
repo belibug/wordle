@@ -3,17 +3,10 @@ import chalk from "chalk";
 import inquirer from "inquirer";
 import fs from "fs";
 
-// define variables
-let finalWord = "00000";
-let userFeed = "XXXXX";
-let suggWord = "MINDS";
-
 // Sample words
 const sampleWords = fs.readFileSync("./data/words", "utf-8");
 // converting everytihg to array and capital letters
 let curList = sampleWords.split(/\r?\n/).map((w) => w.toUpperCase());
-
-suggWord = suggestWord(curList);
 
 // function to suggest best word
 function suggestWord(listLib) {
@@ -50,29 +43,41 @@ async function guessResults() {
   return game_resp;
 }
 
+// Game logic
+let suggWord = suggestWord(curList);
+
 console.log(`
 ${chalk.red("Wordle Solver: ")}
 Lets start with ${suggWord}
-
 `);
 
 let game_res = await guessResults();
 let x = 1;
 
-while (game_res.game != "GGGGG") {
-  console.log(chalk.blue(`Suggested word : ${suggWord}`));
+while (game_res.game.toUpperCase() != "GGGGG") {
   //   afterUserFeed(game_res.game, suggWord);
   var beforeFilterCount = curList.length;
   curList = filterLib(game_res.game, suggWord, curList);
   // remove last suggest word
   curList = curList.filter((w) => w != suggWord);
-  console.log(`${x} : Reduced from ${beforeFilterCount} to ${curList.length}`);
+  console.log(
+    `${x} : Reduced from ${beforeFilterCount} to ${curList.length}\n`
+  );
+  if (curList.length == 0) {
+    console.log(
+      chalk.red(
+        `\nFailed to guess answer\nMake sure you entered feedback properly`
+      )
+    );
+    break;
+  }
 
   suggWord = suggestWord(curList);
-  if (curList.length == 0) {
+  if (curList.length == 1) {
     console.log(chalk.green(`\nOnly possible Answer is ${suggWord}\n`));
     break;
   }
+
   console.log(
     chalk.yellow("Try"),
     chalk.red(suggWord),
@@ -82,4 +87,6 @@ while (game_res.game != "GGGGG") {
   game_res = await guessResults();
   x++;
 }
-console.log(chalk.green(`\nGame Solved : ${suggWord}\n`));
+if (game_res.game.toUpperCase() == "GGGGG") {
+  console.log(chalk.green(`\nGame Solved : ${suggWord}\n`));
+}
