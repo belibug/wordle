@@ -6,7 +6,7 @@ import fs from "fs";
 // define variables
 let finalWord = "00000";
 let userFeed = "XXXXX";
-let yellowChars = "";
+let yellowChars = [];
 let suggWord = "ADMIN";
 
 // Sample words
@@ -26,7 +26,7 @@ function afterUserFeed(userFeed, suggWord) {
         break;
       case "Y":
         // console.log(suggWord[i], ": Yellow word");
-        yellowChars += suggWord[i];
+        yellowChars.push(suggWord[i] + i);
         break;
       case "G":
         // console.log(suggWord[i], ": Green word");
@@ -34,6 +34,8 @@ function afterUserFeed(userFeed, suggWord) {
         finalWord[i] = suggWord[i];
         finalWord = finalWord.join("");
         // finalWord[i] = c;
+        break;
+      default:
         break;
     }
   });
@@ -52,10 +54,30 @@ function iterateFilter(yellowChars, finalWord, curList) {
     }
   });
 
-  yellowChars.split("").map((c) => {
-    filtList = filtList.filter((word) => word.includes(c));
+  // yellowChars.map((yc) => {
+  //   filtList = filtList.filter((word) => {
+  //     let sli =
+  //       word.slice(0, parseInt(yc[1])) + word.slice(parseInt(yc[1] + 1));
+  //     console.log(word, yc, sli);
+  //     return (
+  //       word.slice(0, parseInt(yc[1])) + word.slice(parseInt(yc[1] + 1))
+  //     ).includes(yc[0]);
+  //   });
+  // });
+
+  yellowChars.map((yc) => {
+    filtList = filtList.filter((word) => {
+      for (let i = 0; i < 5; i++) {
+        word[i] == yc[0] && i != parseInt(yc[1]) ? true : false;
+      }
+    });
   });
+
+  // yellowChars.split("").map((c) => {
+  //   filtList = filtList.filter((word) => word.includes(c));
+  // });
   console.log("list after filter", filtList.length);
+  console.log(filtList);
   return filtList;
 }
 
@@ -83,7 +105,9 @@ while (game_res.game != "GGGGG") {
   console.log(chalk.blue(`Suggested word : ${suggWord}`));
   afterUserFeed(game_res.game, suggWord);
   console.log(
-    chalk.blue(`Yellow Chars : ${yellowChars}\nFinal Word: ${finalWord}`),
+    chalk.blue(
+      `Yellow Chars : ${yellowChars.join(";")}\nFinal Word: ${finalWord}`
+    ),
     chalk.cyan("\n------------------------------------------------------")
   );
 
